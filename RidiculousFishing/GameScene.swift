@@ -11,11 +11,17 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
-    var hook:SKSpriteNode!
+    let hook = SKSpriteNode(imageNamed: "hook")
     
     override func didMove(to view: SKView) {
         
-        // write the code to generate a cat every 3 seconds
+        self.backgroundColor = SKColor.white;
+        
+        hook.position = CGPoint(x:self.size.width/2,
+        y:700)
+        addChild(hook)
+        
+        // write the code to generate a fishes
         let generateFish1Sequence = SKAction.sequence(
             [
                 SKAction.run {
