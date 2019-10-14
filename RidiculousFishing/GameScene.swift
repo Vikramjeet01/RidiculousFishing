@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                                            y:640)
         addChild(self.scoreLabel)
         
-    }
+    }//did move ended
     
     var fishes1:[SKSpriteNode] = []
     var fishes2:[SKSpriteNode] = []
@@ -171,6 +171,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 // ---- 2b. remove from scene (undraw the cat)
                 fish3.removeFromParent()
             }
+        }
+        
+        if (self.hook.position.x <= 50) {
+            // left of screen
+            self.xd = self.xd * -1
+        }
+        else if (self.hook.position.x >= self.size.width-100) {
+            // right of screen
+            self.xd = self.xd * -1
+        }
+        else if (self.hook.position.y <= 50) {
+            // botttom of screen
+            self.yd = self.yd * -1
+        }
+        else if (self.hook.position.y >= self.size.height-100)  {
+            // top of screen
+            self.yd = self.yd * -1
         }
         
     }
