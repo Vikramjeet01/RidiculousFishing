@@ -13,49 +13,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     let hook = SKSpriteNode(imageNamed: "hook")
     
+    var xd:CGFloat = 0
+    var yd:CGFloat = 0
+    
+    // GAME STAT SPRITES
+    //let livesLabel = SKLabelNode(text: "Lives: ")
+    let scoreLabel = SKLabelNode(text: "Score: ")
+    
+    var score = 0
+    
     override func didMove(to view: SKView) {
         
         self.backgroundColor = SKColor.white;
         
         hook.position = CGPoint(x:self.size.width/2,
-        y:700)
+        y:600)
         addChild(hook)
         
-        // write the code to generate a fishes
-        let generateFish1Sequence = SKAction.sequence(
-            [
-                SKAction.run {
-                    [weak self] in self?.makeFish1()
-                },
-                SKAction.wait(forDuration: 3)
-            ]
-        )
-        self.run(SKAction.repeatForever(generateFish1Sequence))
-        
-        let generateFish2Sequence = SKAction.sequence(
-            [
-                SKAction.run {
-                    [weak self] in self?.makeFish2()
-                },
-                SKAction.wait(forDuration: 2)
-            ]
-        )
-        self.run(SKAction.repeatForever(generateFish2Sequence))
-
-        let generateFish3Sequence = SKAction.sequence(
-            [
-                SKAction.run {
-                    [weak self] in self?.makeFish3()
-                },
-                SKAction.wait(forDuration: 5)
-            ]
-        )
-        self.run(SKAction.repeatForever(generateFish3Sequence))
+        self.scoreLabel.text = "Score: \(self.score)"
+        self.scoreLabel.fontName = "Avenir-Bold"
+        self.scoreLabel.fontColor = UIColor.magenta
+        self.scoreLabel.fontSize = 20;
+        self.scoreLabel.position = CGPoint(x:70,
+                                           y:640)
+        addChild(self.scoreLabel)
         
     }
     
+    var fishes1:[SKSpriteNode] = []
+    var fishes2:[SKSpriteNode] = []
+    var fishes3:[SKSpriteNode] = []
+    
     func makeFish1() {
-        // lets add some cats
         let fish1 = SKSpriteNode(imageNamed: "fish1")
         
         // generate a random (x,y) for the cat
@@ -66,7 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         addChild(fish1)
         
-        //print("Where is cat? \(randX), \(randY)")
+        self.fishes1.append(fish1)
     }
     
     func makeFish2(){
@@ -78,6 +67,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         fish2.position = CGPoint(x:randX, y:randY)
         
         addChild(fish2)
+        
+        self.fishes2.append(fish2)
     }
     
     func makeFish3(){
@@ -89,6 +80,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         fish3.position = CGPoint(x:randX, y:randY)
         
         addChild(fish3)
+        
+        self.fishes3.append(fish3)
     }
     
     
@@ -96,14 +89,89 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+        let locationTouched = touches.first
+
+        if (locationTouched == nil) {
+            // This is error handling
+            // Sometimes the mouse detection doesn't work properly
+            // and IOS can't get the position.
+            return
+        }
+        
+        let mousePosition = locationTouched!.location(in:self)
+        
+        
+        // calculate those math variables (d, xd, yd)
+        // (x2-x1)
+        let a = mousePosition.x - self.hook.position.x
+        // (y2-y1)
+        let b = mousePosition.y - self.hook.position.y
+        // d
+        let d = sqrt( (a*a) + (b*b))
+        
+        self.xd = a/d
+        self.yd = b/d
+        
     }
     
-    
-    
+    var timeOfLastUpdate:TimeInterval?
     
     override func update(_ currentTime: TimeInterval) {
         
-        //self.makefishes()
+        self.hook.position.x = self.hook.position.x + self.xd * 2
+        self.hook.position.y = self.hook.position.y + self.yd * 2
+        
+        if (timeOfLastUpdate == nil) {
+            timeOfLastUpdate = currentTime
+        }
+        // print a message every 3 seconds
+        var timePassed = (currentTime - timeOfLastUpdate!)
+        if (timePassed >= 2) {
+            //print("HERE IS A MESSAGE!")
+            timeOfLastUpdate = currentTime
+            // make a cat
+            self.makeFish1()
+            self.makeFish2()
+            self.makeFish3()
+        }
+        
+        for (arrayIndex, fish1) in fishes1.enumerated() {
+            if (self.hook.intersects(fish1) == true) {
+                // 1. increase the score
+                self.score = self.score + 1
+                self.scoreLabel.text = "Score: \(self.score)"
+                // ---- 2a. remove from the array
+                self.fishes1.remove(at: arrayIndex)
+                // ---- 2b. remove from scene (undraw the cat)
+                fish1.removeFromParent()
+            }
+        }
+        
+        for (arrayIndex, fish2) in fishes2.enumerated() {
+            if (self.hook.intersects(fish2) == true) {
+                //print("CAT COLLISION DETECTED!")
+                // 1. increase the score
+                self.score = self.score + 2
+                self.scoreLabel.text = "Score: \(self.score)"
+                // ---- 2a. remove from the array
+                self.fishes2.remove(at: arrayIndex)
+                // ---- 2b. remove from scene (undraw the cat)
+                fish2.removeFromParent()
+            }
+        }
+        
+        for (arrayIndex, fish3) in fishes3.enumerated() {
+            if (self.hook.intersects(fish3) == true) {
+                //print("CAT COLLISION DETECTED!")
+                // 1. increase the score
+                self.score = self.score + 3
+                self.scoreLabel.text = "Score: \(self.score)"
+                // ---- 2a. remove from the array
+                self.fishes3.remove(at: arrayIndex)
+                // ---- 2b. remove from scene (undraw the cat)
+                fish3.removeFromParent()
+            }
+        }
         
     }
 }
