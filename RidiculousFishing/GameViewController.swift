@@ -9,8 +9,11 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
 class GameViewController: UIViewController {
+    
+    var musicEffect:AVAudioPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +25,23 @@ class GameViewController: UIViewController {
         skView.ignoresSiblingOrder = true
         scene.scaleMode = .aspectFill
         
+        do{
+            let musicFile = Bundle.main.path(forResource: "sound", ofType: "mp3")
+
+           try musicEffect =  AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicFile!) as URL)
+           
+        }
+        catch{
+            print(error)
+        }
+        
+        musicEffect.play()
+        
         // property to show hitboxes
         skView.showsPhysics = true
         
-        skView.presentScene(scene) 
+        skView.presentScene(scene)
+        
     }
 
     override var shouldAutorotate: Bool {

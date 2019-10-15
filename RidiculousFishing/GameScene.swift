@@ -25,8 +25,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     var score = 0
     
     override func didMove(to view: SKView) {
+
         
-        //self.backgroundColor = SKColor.white;
+        self.backgroundColor = SKColor.white;
         
         //createBG()
         
@@ -51,8 +52,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         self.scoreLabel.fontSize = 20;
         self.scoreLabel.position = CGPoint(x:70,
                                            y:640)
-        addChild(self.scoreLabel)
         
+        
+        addChild(self.scoreLabel)
         
         
     }//did move ended
