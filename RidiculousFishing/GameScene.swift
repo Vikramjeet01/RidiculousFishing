@@ -12,6 +12,8 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     let hook = SKSpriteNode(imageNamed: "hook")
+    let background1 = SKSpriteNode(imageNamed: "bg")
+    let background2 = SKSpriteNode(imageNamed: "bg")
     
     var xd:CGFloat = 0
     var yd:CGFloat = 0
@@ -24,7 +26,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func didMove(to view: SKView) {
         
-        self.backgroundColor = SKColor.white;
+        //self.backgroundColor = SKColor.white;
+        
+        //createBG()
+        
+        background1.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        background1.position = CGPoint(x: size.width/2, y: size.height/2)
+        background1.zPosition = 2
+        addChild(background1)
+        
+        background2.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        background2.position = CGPoint( x: 0, y: background2.size.height-1 )
+        //background2.zPosition = 2
+        addChild(background2)
+        
         
         hook.position = CGPoint(x:self.size.width/2,
         y:600)
@@ -38,7 +53,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                                            y:640)
         addChild(self.scoreLabel)
         
+        
+        
     }//did move ended
+    
+    /*func createBG(){
+        for i in 0...3{
+             let background = SKSpriteNode(imageNamed: "bg")
+            background.name = "Back"
+            background.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)! )
+            background.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+             background.position = CGPoint(x: size.width/2, y: size.height/2)
+             addChild(background)
+        }
+    }
+    
+    func moveBG(){
+        self.enumerateChildNodes(withName: "Back", using: ({
+            (node, error) in
+            
+            node.position.y += 3
+            if node.position.y < -((self.scene?.size.height)!)
+            {
+                node.position.y += (self.scene?.size.height)! * 3
+            }    }))
+    
+    }*/
+
+
     
     var fishes1:[SKSpriteNode] = []
     var fishes2:[SKSpriteNode] = []
@@ -118,6 +160,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func update(_ currentTime: TimeInterval) {
         
+        //moveBG()
+        
+        background1.position = CGPoint(x: background1.position.x, y: background1.position.y + 4)
+        background2.position = CGPoint(x: background2.position.x, y: background2.position.y + 4)
+        if(background1.position.y < -background1.size.height){
+            background1.position = CGPoint(x: background1.position.x, y: background2.position.y + background2.size.height)
+        }
+        
+        if(background2.position.y < -background2.size.height){
+            background2.position = CGPoint(x: background2.position.x, y: background2.position.y + background1.size.height)
+        }
+        
         self.hook.position.x = self.hook.position.x + self.xd * 2
         self.hook.position.y = self.hook.position.y + self.yd * 2
         
@@ -171,23 +225,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 // ---- 2b. remove from scene (undraw the cat)
                 fish3.removeFromParent()
             }
-        }
-        
-        if (self.hook.position.x <= 50) {
-            // left of screen
-            self.xd = self.xd * -1
-        }
-        else if (self.hook.position.x >= self.size.width-100) {
-            // right of screen
-            self.xd = self.xd * -1
-        }
-        else if (self.hook.position.y <= 50) {
-            // botttom of screen
-            self.yd = self.yd * -1
-        }
-        else if (self.hook.position.y >= self.size.height-100)  {
-            // top of screen
-            self.yd = self.yd * -1
         }
         
     }
