@@ -12,8 +12,8 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     let hook = SKSpriteNode(imageNamed: "hook")
-    let background1 = SKSpriteNode(imageNamed: "back1")
-    let background2 = SKSpriteNode(imageNamed: "back1")
+    //let background1 = SKSpriteNode(imageNamed: "back1")
+    //let background2 = SKSpriteNode(imageNamed: "back1")
     
     var xd:CGFloat = 0
     var yd:CGFloat = 0
@@ -40,7 +40,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         addChild(background2)*/
         
         
-        background1.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        /*background1.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         background1.position = CGPoint(x: size.width/2, y: size.height/2)
         background1.zPosition = -1
         addChild(background1)
@@ -48,11 +48,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         background2.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         background2.position = CGPoint( x: size.width/2, y: background2.size.height-1 )
         background2.zPosition = -2
-        addChild(background2)
+        addChild(background2)*/
         
         
         hook.position = CGPoint(x:self.size.width/2,
-        y:600)
+        y:550)
         addChild(hook)
         
         self.scoreLabel.text = "Score: \(self.score)"
@@ -127,6 +127,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         }
         
         let mousePosition = locationTouched!.location(in:self)
+        /*let middleOfScreen = self.size.width / 2
+        if(mousePosition.x < middleOfScreen){
+            hook.position = CGPoint(x:self.size.width*0.25, y:550)
+        }
+        else{
+            hook.position = CGPoint(x: self.size.width*0.85, y: 550)
+        }*/
         
         
         // calculate those math variables (d, xd, yd)
@@ -146,7 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func update(_ currentTime: TimeInterval) {
         
-        background1.position = CGPoint(x: background1.position.x, y: background1.position.y - 4)
+        /*background1.position = CGPoint(x: background1.position.x, y: background1.position.y - 4)
         background2.position = CGPoint(x: background2.position.x, y: background2.position.y - 4)
         if(background1.position.y < -background1.size.height){
             background1.position = CGPoint(x: background2.position.x, y: background1.position.y + background2.size.height)
@@ -154,7 +161,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         if(background2.position.y < -background2.size.height){
             background2.position = CGPoint(x: background1.position.x, y: background2.position.y + background1.size.height)
-        }
+        }*/
         
         self.hook.position.x = self.hook.position.x + self.xd * 2
         self.hook.position.y = self.hook.position.y + self.yd * 2
