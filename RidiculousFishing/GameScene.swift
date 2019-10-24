@@ -12,14 +12,14 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     let hook = SKSpriteNode(imageNamed: "hook")
-    //let background1 = SKSpriteNode(imageNamed: "b")
-    //let background2 = SKSpriteNode(imageNamed: "b")
     
     var xd:CGFloat = 0
     var yd:CGFloat = 0
     
     // GAME STAT SPRITES
     let scoreLabel = SKLabelNode(text: "Score: ")
+    let resultLabel = SKLabelNode(text: "YOU WON")
+    let lostLabel = SKLabelNode(text: "YOU LOST")
     
     var score = 0
     
@@ -28,26 +28,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         self.backgroundColor = SKColor.white;
         
-        /*background1.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        background1.position = CGPoint(x: size.width/2, y: size.height/2)
-        background1.zPosition = -1
-        addChild(background1)
-        
-        background2.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        background2.position = CGPoint(x: size.width/2, y: size.height/2)
-        background2.zPosition = -1
-        addChild(background2)*/
-        
         hook.position = CGPoint(x:self.size.width/2,
-        y:550)
+        y:300)
         addChild(hook)
         
         self.scoreLabel.text = "Score: \(self.score)"
         self.scoreLabel.fontName = "Avenir-Bold"
-        self.scoreLabel.fontColor = UIColor.magenta
-        self.scoreLabel.fontSize = 20;
+        self.scoreLabel.fontColor = UIColor.white
+        self.scoreLabel.fontSize = 30;
         self.scoreLabel.position = CGPoint(x:70,
                                            y:640)
+        
+        self.resultLabel.text = "YOU WON"
+        self.resultLabel.fontName = "Avenir-Bold"
+        self.resultLabel.fontColor = UIColor.white
+        self.resultLabel.fontSize = 80;
+        self.resultLabel.position = CGPoint(x:self.size.width / 2,
+                                           y:self.size.height / 2)
+        
+        self.lostLabel.text = "YOU LOST"
+        self.lostLabel.fontName = "Avenir-Bold"
+        self.lostLabel.fontColor = UIColor.red
+        self.lostLabel.fontSize = 80;
+        self.lostLabel.position = CGPoint(x:self.size.width / 2,
+                                           y:self.size.height / 2)
         
         
         addChild(self.scoreLabel)
@@ -103,7 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     func makeFish1() {
         let fish1 = SKSpriteNode(imageNamed: "fish1")
         
-        // generate a random (x,y) for the cat
+        // generate a random (x,y) for the fish
         let randX = Int(CGFloat(arc4random_uniform(UInt32(self.size.width ))))
         let randY = Int(CGFloat(arc4random_uniform(UInt32(self.size.height ))))
         
@@ -171,8 +175,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func update(_ currentTime: TimeInterval) {
         
-        self.hook.position.x = self.hook.position.x + self.xd * 2
-        self.hook.position.y = self.hook.position.y + self.yd * 2
+        self.hook.position.x = self.hook.position.x + self.xd * 3
+        self.hook.position.y = self.hook.position.y + self.yd * 3
         
         if (timeOfLastUpdate == nil) {
             timeOfLastUpdate = currentTime
@@ -204,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             if (self.hook.intersects(fish2) == true) {
                 //print("CAT COLLISION DETECTED!")
                 // 1. increase the score
-                self.score = self.score + 2
+                self.score = self.score + 3
                 self.scoreLabel.text = "Score: \(self.score)"
                 // ---- 2a. remove from the array
                 self.fishes2.remove(at: arrayIndex)
@@ -217,13 +221,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             if (self.hook.intersects(fish3) == true) {
                 //print("CAT COLLISION DETECTED!")
                 // 1. increase the score
-                self.score = self.score + 3
+                self.score = self.score - 2
                 self.scoreLabel.text = "Score: \(self.score)"
                 // ---- 2a. remove from the array
                 self.fishes3.remove(at: arrayIndex)
                 // ---- 2b. remove from scene (undraw the cat)
                 fish3.removeFromParent()
             }
+        }
+        
+        if(score >= 15){
+            self.view?.isPaused = true
+            addChild(self.resultLabel)
+        }
+        
+        if(score <= -10){
+            self.view?.isPaused = true
+            addChild(self.lostLabel)
         }
         
     }
