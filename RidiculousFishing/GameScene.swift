@@ -230,7 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             }
         }
         
-        if(score >= 15){
+        if(score >= 40){
             self.view?.isPaused = true
             addChild(self.resultLabel)
         }
